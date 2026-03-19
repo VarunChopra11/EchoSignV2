@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echo Sign — Gesture Mappings</title>
+  <meta name="description" content="Complete reference of all 20 ASL gesture mappings supported by Echo Sign, including hand shapes and movement descriptions." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/ui/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <a href="/" class="brand-link">
+          <span class="brand-asl">ECHO</span>
+          <span class="brand-sub">SIGN</span>
+        </a>
+      </div>
+      <nav class="topbar-nav">
+        <a href="/" class="nav-link">◈ DETECTOR</a>
+        <a href="/gestures.html" class="nav-link active">◆ GESTURES</a>
+      </nav>
+    </header>
+
+    <!-- Page Header -->
+    <div class="gestures-header">
+      <div class="gestures-header-content">
+        <h1 class="gestures-title">GESTURE MAPPINGS</h1>
+        <p class="gestures-subtitle">Complete reference of all 20 supported ASL signs — hand shapes, positions, and movement patterns</p>
+      </div>
+      <div class="gestures-stats">
+        <div class="stat-block">
+          <span class="stat-value" id="gesture-count">20</span>
+          <span class="stat-label">GESTURES</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-value">4</span>
+          <span class="stat-label">HAND SHAPES</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-value">3</span>
+          <span class="stat-label">ZONES</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="gestures-filter-bar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="one-hand">ONE HAND</button>
+        <button class="filter-btn" data-filter="two-hands">TWO HANDS</button>
+        <button class="filter-btn" data-filter="face-zone">FACE ZONE</button>
+        <button class="filter-btn" data-filter="body-zone">BODY ZONE</button>
+      </div>
+      <div class="search-wrapper">
+        <input type="text" class="search-input" id="gesture-search" placeholder="Search gestures..." autocomplete="off" />
+      </div>
+    </div>
+
+    <!-- Gesture Grid -->
+    <main class="gestures-grid" id="gestures-grid">
+      <!-- Cards injected by JS -->
+    </main>
+  </div>
+
+  <script type="module" src="/src/gestures-page.js"></script>
+</body>
+</html>

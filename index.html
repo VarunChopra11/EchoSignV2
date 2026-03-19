@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echo Sign</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/ui/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <a href="/" class="brand-link">
+          <span class="brand-asl">ECHO</span>
+          <span class="brand-sub">SIGN</span>
+        </a>
+      </div>
+      <nav class="topbar-nav">
+        <a href="/" class="nav-link active">◈ DETECTOR</a>
+        <a href="/gestures.html" class="nav-link">◆ GESTURES</a>
+      </nav>
+      <div class="topbar-status">
+        <div class="status-pill" id="status-error">
+          <span class="status-dot error"></span>
+          <span class="status-label">ERROR</span>
+        </div>
+        <div class="status-pill" id="status-cam">
+          <span class="status-dot cam"></span>
+          <span class="status-label">CAM OK</span>
+        </div>
+        <div class="status-pill" id="status-fps">
+          <span class="status-dot fps"></span>
+          <span class="status-label" id="fps-value">0 FPS</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Demo Mode Banner -->
+    <div class="demo-banner" id="demo-banner">
+      <span class="demo-icon">◆</span>
+      <span id="demo-text">DEMO MODE — Click "Start Camera" to begin real-time detection</span>
+    </div>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Left: Camera Feed -->
+      <section class="camera-section">
+        <div class="camera-wrapper">
+          <div class="camera-corner tl"></div>
+          <div class="camera-corner tr"></div>
+          <div class="camera-corner bl"></div>
+          <div class="camera-corner br"></div>
+
+          <video id="input-video" autoplay playsinline muted></video>
+          <canvas id="output-canvas"></canvas>
+
+          <div class="camera-overlay" id="camera-overlay">
+            <div class="overlay-icon">⬡</div>
+            <p class="overlay-text">AWAITING CAMERA</p>
+            <button class="btn-start" id="btn-start">START CAMERA</button>
+          </div>
+
+          <div class="frame-info" id="frame-info" style="display:none;">
+            <span class="frame-label" id="frame-label">COLLECTING FRAMES 0/64</span>
+            <div class="frame-bar-track">
+              <div class="frame-bar-fill" id="frame-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Landmark Legend -->
+        <div class="landmark-legend">
+          <div class="legend-item">
+            <span class="legend-dot face"></span>
+            <span class="legend-text">FACE</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot pose"></span>
+            <span class="legend-text">POSE</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot lhand"></span>
+            <span class="legend-text">L-HAND</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot rhand"></span>
+            <span class="legend-text">R-HAND</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Detection Panel -->
+      <aside class="detection-panel">
+        <!-- Detected Sign -->
+        <div class="panel-block">
+          <div class="panel-label">DETECTED SIGN</div>
+          <div class="detected-sign" id="detected-sign">BUFFERING...</div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Confidence -->
+        <div class="panel-block">
+          <div class="panel-row">
+            <div class="panel-label">CONFIDENCE</div>
+            <div class="panel-value" id="confidence-value">—</div>
+          </div>
+          <div class="confidence-track">
+            <div class="confidence-fill" id="confidence-fill"></div>
+            <div class="confidence-threshold" id="confidence-threshold"></div>
+          </div>
+          <div class="threshold-label">▲ 70% threshold</div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Frame Buffer -->
+        <div class="panel-block">
+          <div class="panel-row">
+            <div class="panel-label">FRAME BUFFER</div>
+            <div class="panel-value" id="buffer-value">0/64</div>
+          </div>
+          <div class="buffer-track">
+            <div class="buffer-fill" id="buffer-fill"></div>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Stability -->
+        <div class="panel-block">
+          <div class="panel-row">
+            <div class="panel-label">STABILITY</div>
+            <div class="panel-value" id="stability-value">—</div>
+          </div>
+          <div class="stability-track">
+            <div class="stability-fill" id="stability-fill"></div>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- Recent Signs -->
+        <div class="panel-block recent-block">
+          <div class="panel-label">RECENT SIGNS</div>
+          <div class="recent-signs" id="recent-signs">
+            <div class="recent-empty">No signs detected yet</div>
+          </div>
+        </div>
+
+        <div class="panel-divider"></div>
+
+        <!-- How to Use -->
+        <div class="panel-block howto-block">
+          <div class="panel-label">HOW TO USE</div>
+          <ul class="howto-list">
+            <li>▸ Face the camera directly</li>
+            <li>▸ Sign clearly for ~2 seconds</li>
+            <li>▸ Good lighting helps accuracy</li>
+            <li>▸ Keep hands in frame</li>
+            <li>▸ Upper body should be visible</li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
