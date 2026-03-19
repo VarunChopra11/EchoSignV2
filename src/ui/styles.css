@@ -829,18 +829,41 @@ html, body {
 
 /* ── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 900px) {
-  .main-layout { flex-direction: column; padding-bottom: 0; }
-  .detection-panel { width: 100%; margin-left: 0; margin-top: 10px; flex-direction: row; flex-wrap: wrap; overflow-y: visible; }
-  .panel-block { flex: 1; min-width: 140px; }
-  .panel-divider { display: none; }
-  .detected-sign { font-size: 22px; }
+  /* Allow scrolling on main layout */
+  .main-layout { flex-direction: column; padding: 0 16px 20px; overflow-y: auto; flex: 1; min-height: 0; }
+  
+  /* Fix camera section on mobile to ensure it doesn't get collapsed */
+  .camera-section { min-height: 45vh; flex: none; gap: 8px; }
+  
+  /* Make the detection panel stack vertically instead of wrapping awkwardly */
+  .detection-panel { width: 100%; margin-left: 0; margin-top: 10px; flex-direction: column; overflow-y: visible; gap: 0; }
+  .panel-block { padding: 12px 0; width: 100%; }
+  .panel-divider { display: block; }
+  .detected-sign { font-size: 32px; }
 
-  .gestures-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .gestures-stats { width: 100%; }
-  .gestures-filter-bar { flex-direction: column; align-items: stretch; }
-  .filter-group { flex-wrap: wrap; }
-  .search-input { width: 100%; }
-  .gestures-grid { grid-template-columns: 1fr; }
-  .topbar-nav { gap: 4px; }
-  .nav-link { font-size: 9px; padding: 4px 8px; letter-spacing: 1px; }
+  /* Topbar responsive fixes */
+  .topbar { padding: 0 12px; gap: 8px; }
+  .brand-sub { display: none; } /* Hide secondary logo text to save space */
+  #status-fps { display: none !important; } /* Hide FPS to fit */
+  #status-error.ok { display: none !important; } /* Hide OK system status to fit */
+  #status-cam .status-label { font-size: 9px; }
+  
+  /* Gestures page */
+  .gestures-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 16px; }
+  .gestures-stats { width: 100%; justify-content: space-between; gap: 8px; }
+  .stat-block { flex: 1; min-width: 0; padding: 8px 4px; }
+  
+  .gestures-filter-bar { flex-direction: column; align-items: stretch; padding: 0 16px 16px; gap: 12px; }
+  .filter-group { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px; }
+  .filter-btn { flex: 1 1 calc(33.333% - 6px); font-size: 9px; padding: 8px 4px; text-align: center; }
+  
+  .search-input { width: 100%; font-size: 13px; padding: 10px; }
+  .gestures-grid { grid-template-columns: 1fr; padding: 0 16px 20px; gap: 12px; }
+  
+  .topbar-nav { gap: 4px; flex-shrink: 0; }
+  .nav-link { font-size: 9px; padding: 6px 8px; letter-spacing: 1px; }
+  
+  /* Demo banner mobile */
+  .demo-banner { margin: 10px 16px; padding: 8px 12px; }
+  .demo-icon { display: none; }
 }
