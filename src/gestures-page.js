@@ -5,6 +5,29 @@
  * and provides search/filter functionality.
  */
 
+const dictionary = {
+  'hello': { 'en-US': 'hello', 'hi-IN': 'नमस्ते', 'fr-FR': 'bonjour' },
+  'mom': { 'en-US': 'mom', 'hi-IN': 'माँ', 'fr-FR': 'maman' },
+  'dad': { 'en-US': 'dad', 'hi-IN': 'पिता', 'fr-FR': 'papa' },
+  'happy': { 'en-US': 'happy', 'hi-IN': 'खुश', 'fr-FR': 'heureux' },
+  'now': { 'en-US': 'now', 'hi-IN': 'अभी', 'fr-FR': 'maintenant' },
+  'please': { 'en-US': 'please', 'hi-IN': 'कृपया', 'fr-FR': 's\'il vous plaît' },
+  'give': { 'en-US': 'give', 'hi-IN': 'देना', 'fr-FR': 'donner' },
+  'milk': { 'en-US': 'milk', 'hi-IN': 'दूध', 'fr-FR': 'lait' },
+  'thankyou': { 'en-US': 'thank you', 'hi-IN': 'धन्यवाद', 'fr-FR': 'merci' },
+  'yes': { 'en-US': 'yes', 'hi-IN': 'हाँ', 'fr-FR': 'oui' },
+  'no': { 'en-US': 'no', 'hi-IN': 'नहीं', 'fr-FR': 'non' },
+  'dog': { 'en-US': 'dog', 'hi-IN': 'कुत्ता', 'fr-FR': 'chien' },
+  'cat': { 'en-US': 'cat', 'hi-IN': 'बिल्ली', 'fr-FR': 'chat' },
+  'drink': { 'en-US': 'drink', 'hi-IN': 'पीना', 'fr-FR': 'boire' },
+  'go': { 'en-US': 'go', 'hi-IN': 'जाना', 'fr-FR': 'aller' },
+  'outside': { 'en-US': 'outside', 'hi-IN': 'बाहर', 'fr-FR': 'dehors' },
+  'boy': { 'en-US': 'boy', 'hi-IN': 'लड़का', 'fr-FR': 'garçon' },
+  'girl': { 'en-US': 'girl', 'hi-IN': 'लड़की', 'fr-FR': 'fille' },
+  'water': { 'en-US': 'water', 'hi-IN': 'पानी', 'fr-FR': 'eau' },
+  'see': { 'en-US': 'see', 'hi-IN': 'देखना', 'fr-FR': 'voir' }
+};
+
 // ── Gesture Data ──────────────────────────────────────────────
 const GESTURES = [
   {
@@ -355,6 +378,11 @@ function createCard(gesture) {
     <div class="gesture-details-label">STEPS</div>
     <ul class="gesture-details">
       ${gesture.details.map(d => `<li>${d}</li>`).join('')}
+    </ul>
+    <div class="gesture-details-label" style="margin-top: 10px;">TRANSLATIONS</div>
+    <ul class="gesture-details">
+      <li><strong>HIN:</strong> ${dictionary[gesture.word.toLowerCase()]?.['hi-IN'] || gesture.word}</li>
+      <li><strong>FRA:</strong> ${dictionary[gesture.word.toLowerCase()]?.['fr-FR'] || gesture.word}</li>
     </ul>
   `;
 

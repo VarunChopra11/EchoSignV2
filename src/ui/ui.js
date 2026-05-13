@@ -29,6 +29,43 @@ export class UIController {
     this.elCameraOverlay   = document.getElementById('camera-overlay');
     this.elVideo           = document.getElementById('input-video');
 
+    // Language Toggle
+    this.elLangToggle      = document.getElementById('lang-toggle');
+
+    /** Language State */
+    this.languages = ['en-US', 'hi-IN', 'fr-FR'];
+    this.languageLabels = ['ENG', 'HIN', 'FRA'];
+    this.currentLangIndex = 0;
+
+    // Bind toggle click
+    if (this.elLangToggle) {
+      this.elLangToggle.addEventListener('click', () => this.toggleLanguage());
+    }
+
+    /** Dictionary for translations */
+    this.dictionary = {
+      'hello': { 'en-US': 'hello', 'hi-IN': 'नमस्ते', 'fr-FR': 'bonjour' },
+      'mom': { 'en-US': 'mom', 'hi-IN': 'माँ', 'fr-FR': 'maman' },
+      'dad': { 'en-US': 'dad', 'hi-IN': 'पिता', 'fr-FR': 'papa' },
+      'happy': { 'en-US': 'happy', 'hi-IN': 'खुश', 'fr-FR': 'heureux' },
+      'now': { 'en-US': 'now', 'hi-IN': 'अभी', 'fr-FR': 'maintenant' },
+      'please': { 'en-US': 'please', 'hi-IN': 'कृपया', 'fr-FR': 's\'il vous plaît' },
+      'give': { 'en-US': 'give', 'hi-IN': 'देना', 'fr-FR': 'donner' },
+      'milk': { 'en-US': 'milk', 'hi-IN': 'दूध', 'fr-FR': 'lait' },
+      'thankyou': { 'en-US': 'thank you', 'hi-IN': 'धन्यवाद', 'fr-FR': 'merci' },
+      'yes': { 'en-US': 'yes', 'hi-IN': 'हाँ', 'fr-FR': 'oui' },
+      'no': { 'en-US': 'no', 'hi-IN': 'नहीं', 'fr-FR': 'non' },
+      'dog': { 'en-US': 'dog', 'hi-IN': 'कुत्ता', 'fr-FR': 'chien' },
+      'cat': { 'en-US': 'cat', 'hi-IN': 'बिल्ली', 'fr-FR': 'chat' },
+      'drink': { 'en-US': 'drink', 'hi-IN': 'पीना', 'fr-FR': 'boire' },
+      'go': { 'en-US': 'go', 'hi-IN': 'जाना', 'fr-FR': 'aller' },
+      'outside': { 'en-US': 'outside', 'hi-IN': 'बाहर', 'fr-FR': 'dehors' },
+      'boy': { 'en-US': 'boy', 'hi-IN': 'लड़का', 'fr-FR': 'garçon' },
+      'girl': { 'en-US': 'girl', 'hi-IN': 'लड़की', 'fr-FR': 'fille' },
+      'water': { 'en-US': 'water', 'hi-IN': 'पानी', 'fr-FR': 'eau' },
+      'see': { 'en-US': 'see', 'hi-IN': 'देखना', 'fr-FR': 'voir' }
+    };
+
     /** Recent signs history */
     this.recentHistory = [];
     this.lastDetectedWord = null;
@@ -38,14 +75,42 @@ export class UIController {
     this._speaking = false;
   }
 
+  toggleLanguage() {
+    this.currentLangIndex = (this.currentLangIndex + 1) % this.languages.length;
+    if (this.elLangToggle) {
+      this.elLangToggle.querySelector('.status-label').textContent = this.languageLabels[this.currentLangIndex];
+    }
+  }
+
+  getTranslatedWord(word) {
+    const lang = this.languages[this.currentLangIndex];
+    if (this.dictionary[word] && this.dictionary[word][lang]) {
+      return this.dictionary[word][lang];
+    }
+    return word; // fallback
+  }
+
   /**
    * Speak a word aloud via Web Speech API
    */
   _speak(word) {
     if (!this._synth || this._speaking) return;
-    const utterance = new SpeechSynthesisUtterance(word);
+
+    const lang = this.languages[this.currentLangIndex];
+    const translatedWord = this.getTranslatedWord(word);
+
+    const utterance = new SpeechSynthesisUtterance(translatedWord);
+    utterance.lang = lang;
     utterance.rate = 0.9;
     utterance.pitch = 1;
+
+    // Try to find a specific voice for the language
+    const voices = this._synth.getVoices();
+    const targetVoice = voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+    if (targetVoice) {
+      utterance.voice = targetVoice;
+    }
+
     this._speaking = true;
     utterance.onend = () => { this._speaking = false; };
     utterance.onerror = () => { this._speaking = false; };
@@ -74,14 +139,15 @@ export class UIController {
     // Detection
     if (detection) {
       const confPct = Math.round(detection.confidence * 100);
-      this.elDetectedSign.textContent = detection.word.toUpperCase();
+      const displayWord = this.getTranslatedWord(detection.word);
+      this.elDetectedSign.textContent = displayWord.toUpperCase();
       this.elDetectedSign.classList.add('active');
       this.elConfidenceValue.textContent = `${confPct}%`;
       this.elConfidenceFill.style.width = `${Math.min(confPct, 100)}%`;
 
       // Add to recent if new word
       if (detection.word !== this.lastDetectedWord) {
-        this.addRecent(detection.word, confPct);
+        this.addRecent(detection.word, displayWord, confPct);
         this._speak(detection.word);
         this.lastDetectedWord = detection.word;
       }
@@ -101,8 +167,8 @@ export class UIController {
   /**
    * Add entry to recent signs history
    */
-  addRecent(word, confPct) {
-    this.recentHistory.unshift({ word, confPct });
+  addRecent(originalWord, translatedWord, confPct) {
+    this.recentHistory.unshift({ word: translatedWord, confPct });
     if (this.recentHistory.length > MAX_RECENT) {
       this.recentHistory.pop();
     }
